@@ -1,0 +1,31 @@
+{
+  "task_id": "columbia-dining-assistance",
+  "name": "Choose meals and answer Columbia Dining questions",
+  "description": "Example requests the Columbia Dining assistant should handle.",
+  "steps": [
+    {
+      "step_id": "identify-request",
+      "description": "Identify whether the student wants a meal recommendation, a change to a recommendation, current menu or hours information, or a general dining answer."
+    },
+    {
+      "step_id": "recommend-meal",
+      "description": "For 'What should I eat tonight?', clarify relevant preferences, retrieve the dated menu and hours, and suggest matching dishes with sources."
+    },
+    {
+      "step_id": "refine-meal",
+      "description": "For 'Try Ferris instead', preserve the student's other preferences, change the requested hall, and search again. If nothing matches, explain why and let the student decide what to change."
+    },
+    {
+      "step_id": "answer-dining-question",
+      "description": "For questions such as 'What is the difference between Dining Dollars and Flex?', 'What does VN mean?', 'Do weekly swipes roll over?', and 'Who can help with dietary needs?', retrieve relevant reference passages, answer only what they support, and cite the original official URL. Ask for student affiliation or plan type only when the answer depends on it."
+    },
+    {
+      "step_id": "check-live-information",
+      "description": "For 'Hello! What is currently open?', 'Is John Jay open now?' or 'What is served today?', use live menu/hour data and America/New_York time. No hall name or date is required for a current-hours lookup. Reference summaries cannot establish current availability."
+    },
+    {
+      "step_id": "handle-unknowns",
+      "description": "When the available information does not answer the question, explain what is missing and link a relevant official source."
+    }
+  ]
+}

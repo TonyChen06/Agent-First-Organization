@@ -1,0 +1,9 @@
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+.cache/
+*.egg-info/
+logs/
+*.log
+columbia_dining/data/

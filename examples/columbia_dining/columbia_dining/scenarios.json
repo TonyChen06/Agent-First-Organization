@@ -1,0 +1,47 @@
+{
+  "schema_version": "v1",
+  "scenarios": [
+    {
+      "scenario_id": "undecided",
+      "user_id": "student-1",
+      "goal": "Get concrete meal ideas from today's published Columbia menus, or a clear explanation if today's service has ended. Avoid getting stuck in repeated preference questions.",
+      "agent_context": "Columbia Dining assistant with live dated menus, hours, and reference documents. Today and now refer to New York time.",
+      "user_profile": "An undecided student. Start by saying you don't know what you're craving and want ideas. You have no dietary restrictions; if asked, say so. You don't want to choose a specific meal or flavor first."
+    },
+    {
+      "scenario_id": "changed-preference",
+      "user_id": "student-2",
+      "goal": "Find vegan options at John Jay for dinner today, then switch to Ferris while keeping the vegan restriction. Accept an honest lack of available service or matching dishes.",
+      "agent_context": "The assistant can filter live dated menus by hall and published dietary labels. Recommendations must respect available serving windows.",
+      "user_profile": "A vegan Columbia student with no declared allergies. First ask for vegan dinner at John Jay today. After the response, ask 'What about Ferris instead?' without repeating vegan. Check that any subsequent suggestions retain your restriction."
+    },
+    {
+      "scenario_id": "hours",
+      "user_id": "student-3",
+      "goal": "Learn which dining locations are open right now, then get John Jay's published opening hours for today, with a source.",
+      "agent_context": "The assistant retrieves Columbia's published schedules. Scheduled hours are not a guarantee that every station is serving. Interpret times in New York.",
+      "user_profile": "A student planning where to eat. Start with 'What's currently open?' Then ask for John Jay's full hours today. You want hours, not a preference interview or food suggestions."
+    },
+    {
+      "scenario_id": "policy-topic-switch",
+      "user_id": "student-4",
+      "goal": "Start a meal recommendation, then switch topics and understand Dining Dollars versus Flex and whether a dining plan can be shared. Get sourced policy answers without being forced to finish the meal interview.",
+      "agent_context": "The assistant supports both meal recommendations and factual dining questions using local summaries of official sources.",
+      "user_profile": "A new Columbia student. Start with 'Help me pick lunch.' On your next turn, switch to asking how Dining Dollars differ from Flex. Then ask whether you can share your dining plan with a friend.",
+      "knowledge": [
+        {"content": "Source: https://dining.columbia.edu/content/dining-plans . Dining Dollars and Flex are declining-balance accounts accessed with Columbia ID. Dining Dollars are for enrolled students and tax-free. Flex is for students, faculty, and staff and is not tax-free. Both work at campus dining; Flex also supports the University Bookstore, campus copy and vending machines, and Grubhub. Balances carry forward until graduation."},
+        {"content": "Source: https://dining.columbia.edu/content/dining-plan-policy . Dining plans cannot be shared, cancelled, or converted into Flex or Dining Dollars. Plan changes are limited to specified change periods."}
+      ]
+    },
+    {
+      "scenario_id": "allergy-uncertainty",
+      "user_id": "student-5",
+      "goal": "Understand what the VN label means and how to check a dish for a peanut allergy. The assistant should explain the limits of menu labels and direct you to dining staff instead of guaranteeing safety.",
+      "agent_context": "The assistant has Columbia's dietary-label and allergy-support reference. It cannot verify cross-contact for a particular serving.",
+      "user_profile": "A student with a peanut allergy. Start by asking if VN means peanut-free. Then ask whether a dish without listed peanut allergens is guaranteed safe and how you should verify it.",
+      "knowledge": [
+        {"content": "Source: https://dining.columbia.edu/content/food-allergies-special-diets . VN means vegan, V vegetarian, GF gluten-free, and H halal. Columbia identifies allergen cross-contact risk. Check station allergen information and ask a manager to review ingredients. Missing allergen information is not proof of safety. A registered dietitian provides individual consultation."}
+      ]
+    }
+  ]
+}

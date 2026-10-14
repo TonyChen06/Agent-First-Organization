@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "columbia-dining-agent"
+version = "0.1.0"
+description = "An Arklex agent that recommends dishes from Columbia's dated dining menus."
+requires-python = ">=3.11"
+dependencies = ["arklex==0.1.21", "python-dotenv>=1,<2"]
+
+[project.optional-dependencies]
+evaluation = ["arksim==0.3.8"]
+
+[tool.setuptools.packages.find]
+include = ["columbia_dining*"]
+
+[tool.setuptools.package-data]
+columbia_dining = ["*.json", "docs/*.json", "docs/reference/*.txt"]

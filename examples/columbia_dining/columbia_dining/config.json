@@ -1,0 +1,134 @@
+{
+  "role": "Columbia Dining meal recommendation and information assistant",
+  "user_objective": "The assistant helps Columbia students choose dishes from dated menus and answers questions about Columbia Dining's meal plans, payment accounts, dietary labels, policies, and support services.",
+  "builder_objective": "The assistant uses official Columbia Dining information, asks relevant follow-up questions, remembers stated preferences, and provides source links.",
+  "domain": "Columbia University campus dining",
+  "intro": "Columbia Dining publishes dining information at https://dining.columbia.edu/. The assistant supports meal recommendations and general dining questions. DiningMenuWorker retrieves live menus and hours and answers using that evidence. FaissRAGWorker retrieves and answers from reference information. MessageWorker provides the greeting.",
+  "task_docs": [
+    {
+      "source": "columbia_dining/docs/tasks.json",
+      "desc": "Meal recommendation and dining Q&A user scenarios."
+    }
+  ],
+  "instruction_docs": [
+    {
+      "source": "columbia_dining/docs/instructions.json",
+      "desc": "Instructions for source use, conversation, and answers."
+    }
+  ],
+  "rag_docs": [
+    {
+      "source": "columbia_dining/docs/reference/dietary_labels.txt",
+      "type": "file",
+      "desc": "dietary labels; summary of official Columbia Dining information."
+    },
+    {
+      "source": "columbia_dining/docs/reference/dining_accounts.txt",
+      "type": "file",
+      "desc": "dining accounts; summary of official Columbia Dining information."
+    },
+    {
+      "source": "columbia_dining/docs/reference/nutrition_services.txt",
+      "type": "file",
+      "desc": "nutrition services; summary of official Columbia Dining information."
+    },
+    {
+      "source": "columbia_dining/docs/reference/plan_faq.txt",
+      "type": "file",
+      "desc": "plan faq; summary of official Columbia Dining information."
+    },
+    {
+      "source": "columbia_dining/docs/reference/plan_policy.txt",
+      "type": "file",
+      "desc": "plan policy; summary of official Columbia Dining information."
+    }
+  ],
+  "user_tasks": [
+    {
+      "id": "recommend-meal",
+      "task": "Recommend a meal from Columbia Dining",
+      "description": "Collect missing preferences, obtain dated menu options, and recommend matching dishes with their hall, serving window, and source.",
+      "intent": "The student wants help choosing dishes for a date and meal, with optional dining hall and food preferences.",
+      "steps": [
+        {
+          "resource": {
+            "name": "DiningMenuWorker"
+          },
+          "task": "Clarify missing meal preferences using the conversation, then retrieve dated menus matching the student's stated preferences and restrictions. Use the live-menu evidence to recommend matching dishes with their hall, serving times, reasons, and official source. Explain if no dishes match; do not invent options."
+        }
+      ]
+    },
+    {
+      "id": "refine-recommendation",
+      "task": "Refine a dining recommendation",
+      "description": "Update the student's stated preferences and retrieve new matching options while preserving restrictions they have not changed.",
+      "intent": "The student changes a preference, rejects a suggestion, or requests another dining hall or meal while retaining their other stated restrictions.",
+      "steps": [
+        {
+          "resource": {
+            "name": "DiningMenuWorker"
+          },
+          "task": "Apply the student's changed preferences, preserve other stated restrictions, and retrieve matching dated menus again. Explain the updated matching dishes using the live-menu evidence, including hall, serving times, and official source. Explain any lack of matches."
+        }
+      ]
+    },
+    {
+      "id": "find-opening-hours",
+      "task": "Find dining hall opening hours",
+      "description": "Retrieve published opening hours for one or all Columbia dining locations, including what is open now when no hall or date is specified.",
+      "intent": "The student asks what Columbia dining locations are open now, when a location opens or closes, or opening hours on a date. The hall and date are optional.",
+      "steps": [
+        {
+          "resource": {
+            "name": "DiningMenuWorker"
+          },
+          "task": "Retrieve published hours for the requested hall or all locations when no hall is specified. Use today in New York when no date is given, and filter for current service when asked what is open now. Report the matching locations and their hours from the live evidence with its date and official source; say when hours are unavailable."
+        }
+      ]
+    },
+    {
+      "id": "answer-dining-question",
+      "task": "Answer general Columbia Dining questions",
+      "description": "Retrieve relevant verified passages about dining-plan concepts, Dining Dollars and Flex, dietary labels, policies, or support services. Answer with official source links and relevant date qualifications; explain gaps rather than guessing.",
+      "intent": "The student asks a factual question about Columbia Dining rather than asking for a meal recommendation.",
+      "steps": [
+        {
+          "resource": {
+            "name": "FaissRAGWorker"
+          },
+          "task": "Retrieve reference passages and answer the dining question using their official sources and qualifications. Explain when the information is missing."
+        }
+      ]
+    }
+  ],
+  "workers": [
+    {
+      "id": "message-worker",
+      "name": "MessageWorker",
+      "path": "arklex/resources/workers/message/message_worker.py",
+      "description": "Greet the student and ask how to help."
+    },
+    {
+      "id": "dining-menu-worker",
+      "name": "DiningMenuWorker",
+      "path": "columbia_dining/workers/dining_menu_worker.py",
+      "description": "Ask relevant preference questions or retrieve, filter, and explain live dated menus and hours. Retain stated restrictions and include official sources."
+    },
+    {
+      "id": "faiss-rag-worker",
+      "name": "FaissRAGWorker",
+      "path": "arklex/resources/workers/faiss_rag/faiss_rag_worker.py",
+      "description": "Retrieve Columbia Dining reference passages and generate an answer to general dining questions with source links. Does not retrieve live menus or hours."
+    }
+  ],
+  "tools": [],
+  "llm_config": {
+    "llm_provider": "openai",
+    "model_type_or_path": "gpt-6-luna",
+    "langchain_model_kwargs": {
+      "reasoning_effort": "none",
+      "timeout": 30,
+      "max_retries": 1
+    }
+  }
+}
